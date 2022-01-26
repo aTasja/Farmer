@@ -40,7 +40,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.Outline
     - UnityEngine.UI.Text
   sceneClasses:
-    Assets/Scenes/SampleScene.unity:
+    Assets/_Scenes/SampleScene.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -304,7 +304,7 @@ ScriptsOnlyBuild:
     className: GridLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: 206d3f521b255bf04d4b6cf97d5af9a9
+      Hash: 74e5e42184974bb42d0cea42f932bb4b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Bomb
@@ -412,13 +412,13 @@ ScriptsOnlyBuild:
     className: PixelPerfectCamera
   - hash:
       serializedVersion: 2
-      Hash: afc5b93a7b192de2dcb3832fe35a5c7e
+      Hash: 212e71496030959d123c2e5c1fb60fe9
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: FarmerMovement
   - hash:
       serializedVersion: 2
-      Hash: d03c6dfdd97102c9f5df8467a358086a
+      Hash: 4735b266e98dd163d12f861b833c97d9
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager
@@ -820,7 +820,7 @@ ScriptsOnlyBuild:
     className: CinemachineImpulseSource
   - hash:
       serializedVersion: 2
-      Hash: d5b885e97a69b4fb2a4fbef8867f959c
+      Hash: 2f3b48e70c5654f9d23ca78315517510
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayerController
@@ -1024,5 +1024,5 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   platform: 13
   scenePathNames:
-  - Assets/Scenes/SampleScene.unity
-  playerPath: D:/MediaHub/06_Unity/00UnityProjects/Farmer/Build/1st.apk
+  - Assets/_Scenes/SampleScene.unity
+  playerPath: D:/MediaHub/06_Unity/00UnityProjects/Farmer/Build/build.apk

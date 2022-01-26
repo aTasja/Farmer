@@ -123,7 +123,10 @@ public class GameManager : MonoBehaviour
         if (carrotScoreInt == CarrotsNumber)
         {
             _S.YouWonText.gameObject.SetActive(true);
-            WonScore.text = (carrotScoreInt * bombScoreInt).ToString();
+            if(bombScoreInt>0)
+                WonScore.text = (carrotScoreInt * bombScoreInt).ToString();
+            else
+                WonScore.text = carrotScoreInt.ToString();
             Time.timeScale = 0;
         }
     }
