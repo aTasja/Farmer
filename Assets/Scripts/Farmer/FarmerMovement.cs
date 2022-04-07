@@ -1,122 +1,98 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using Grid;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class FarmerMovement : MonoBehaviour
+namespace Farmer
 {
-    public float Speed = 1f;
-    public float DirtyDelayRuration = 5f;
-
-    private GameObject player;
-    private Vector3 playerPos;
-    
-    bool isMoving = false;
-
-    private bool isDirty = false;
-    private float dirtyDelayElapsed = 0;
-
-    private Vector3 currentDirection = Vector3.zero;
-    private Vector3 finalDirection = Vector3.zero;
-
-    private Collider2D farmerCollider;
-    private Collider2D playerCollider;
-
-    void Start()
+    public class FarmerMovement : MonoBehaviour
     {
-        farmerCollider = GetComponent<Collider2D>();
-        player = GameObject.Find("Player");
-        playerCollider = player.GetComponent<Collider2D>();
-    }
+        public float Speed = 1f;
 
-    private void OnEnable()
-    {
-        Bomb.OnEventDirtyFarmer += FarmerIsDirty;
-    }
+        [SerializeField] private GameObject _player;
+        
+        private bool _isMoving;
+        private FarmerCollision _farmerCollision;
+        private Vector3 _playerPos;
+        private Vector3 _currentDirection = Vector3.zero;
+        private Vector3 _newDirection = Vector3.zero;
 
-    private void OnDisable()
-    {
-        Bomb.OnEventDirtyFarmer -= FarmerIsDirty;
-    }
+        private void Awake() => _farmerCollision = GetComponent<FarmerCollision>();
+        
+        public Collider2D PlayerCollider => _player.GetComponent<Collider2D>();
 
-    void Update()
-    {
-        if (isDirty && dirtyDelayElapsed <= DirtyDelayRuration)
-            dirtyDelayElapsed += Time.deltaTime;
-        else
-            isDirty = false;
-
-        if (!isDirty)
+        void Update()
         {
-            if (farmerCollider.bounds.Intersects(playerCollider.bounds))
-                GameManager.GAMEOVER();
+            if (_farmerCollision.IsDirty || _isMoving) return;
 
-            playerPos = player.GetComponent<Transform>().position;
-            float[] directions = new float[]
+            var directionsToPLayer = GetDirectionsToPlayer();
+            _newDirection = RandomlyChooseStartDirection(directionsToPLayer);
+            
+            SetDestinationSprite();
+            StartCoroutine(Move(transform.position + _newDirection));
+        }
+
+        private float[] GetDirectionsToPlayer()
+        {
+            _playerPos = _player.GetComponent<Transform>().position;
+            return new []
             {
-            transform.position.x - playerPos.x,
-            transform.position.y - playerPos.y,
+                transform.position.x - _playerPos.x,
+                transform.position.y - _playerPos.y,
             };
-
-            finalDirection = RandomlyChooseDirection(directions);
-
-            if (!isMoving) StartCoroutine(Move(transform.position + finalDirection));
-        }
-    }
-
-    private Vector3 RandomlyChooseDirection(float[] xANDy)
-    {
-        Vector3 finalDest;
-        if (Random.Range(0, xANDy.Length) == 0)
-        {
-            finalDest =  xANDy[0] >= 0 ? Vector3.left : Vector3.right;
-        }
-        else
-        {
-            finalDest =  xANDy[1] >= 0 ? Vector3.down : Vector3.up;
         }
 
-        // check if the final position is not empty and change the result if it's so
-        Vector3 moveToPosition = transform.position + finalDest;
-        if (!GameManager.IsCellClear(moveToPosition))
+        private Vector3 RandomlyChooseStartDirection(float[] xANDy)
         {
-            if (finalDest == Vector3.left || finalDest == Vector3.right)
+            Vector3 finalDest;
+            if (Random.Range(0, xANDy.Length) == 0)
             {
-                finalDest = xANDy[1] >= 0 ? Vector3.down : Vector3.up;
+                finalDest =  xANDy[0] >= 0 ? Vector3.left : Vector3.right;
             }
             else
             {
-                finalDest = xANDy[0] >= 0 ? Vector3.left : Vector3.right;
+                finalDest =  xANDy[1] >= 0 ? Vector3.down : Vector3.up;
+            }
+        
+            Vector3 moveToPosition = transform.position + finalDest;
+            ChangeDirectionIfObstacleOnTheWay(xANDy, moveToPosition, ref finalDest);
+            return finalDest;
+        }
+
+        private void ChangeDirectionIfObstacleOnTheWay(float[] xANDy, Vector3 moveToPosition, ref Vector3 finalDest)
+        {
+            if (!GridContainer.IsCellClear(moveToPosition))
+            {
+                if (finalDest == Vector3.left || finalDest == Vector3.right)
+                {
+                    finalDest = xANDy[1] >= 0 ? Vector3.down : Vector3.up;
+                }
+                else
+                {
+                    finalDest = xANDy[0] >= 0 ? Vector3.left : Vector3.right;
+                }
             }
         }
-        return finalDest;
-    }
 
-    private IEnumerator Move(Vector3 newPos)
-    {
-        isMoving = true;
-
-        if (currentDirection != finalDirection)
+        private void SetDestinationSprite()
         {
-            currentDirection = finalDirection;
-            gameObject.GetComponent<DestinationSprite>().ChangeSprite(finalDirection);
+            if (_currentDirection == _newDirection) return;
+            _currentDirection = _newDirection;
+            _farmerCollision.DestinationSprite.ChangeSprite(_newDirection);
         }
 
-        while ((newPos - transform.position).sqrMagnitude > Mathf.Epsilon)
+        private IEnumerator Move(Vector3 newPos)
         {
-            transform.position = Vector3.MoveTowards(transform.position, newPos, Speed * Time.deltaTime);
-            yield return null;
-        }
-        transform.position = newPos;
-        
-        isMoving = false;
-    }
-
-    private void FarmerIsDirty()
-    {
-        if (!isDirty)
-        {
-            dirtyDelayElapsed = 0;
-            isDirty = true;
+            _isMoving = true;
+            
+            while (Vector3.Distance(newPos, transform.position) > Mathf.Epsilon)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, newPos, Speed * Time.deltaTime);
+                yield return null;
+            }
+            transform.position = newPos;
+            
+            _isMoving = false;
         }
     }
 }

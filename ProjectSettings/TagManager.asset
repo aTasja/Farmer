@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Farmer
   - Bomb
+  - Carrot
   layers:
   - Default
   - TransparentFX

@@ -1,7 +1,10 @@
-namespace Grid
+using UnityEngine;
+
+public class InputMonitor:MonoBehaviour
 {
-    public class InputMonitor
+    private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+          Application.Quit();
     }
 }

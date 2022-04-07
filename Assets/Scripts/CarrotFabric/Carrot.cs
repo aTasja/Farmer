@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Carrot : MonoBehaviour
+namespace CarrotFabric
 {
-    void Start()
+    public class Carrot : MonoBehaviour
     {
-        float randomZrotation = Random.Range(0, 360f);
-        transform.rotation = Quaternion.Euler(0, 0, randomZrotation);
+        private void Start()
+        {
+            var randomZrotation = Random.Range(0, 360f);
+            transform.rotation = Quaternion.Euler(0, 0, randomZrotation);
+        }
     }
 }

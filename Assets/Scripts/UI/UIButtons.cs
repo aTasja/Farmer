@@ -2,13 +2,11 @@ using UnityEngine;
 
 namespace UI
 {
-    public class UIButton:MonoBehaviour
+    public class UIButtons:MonoBehaviour
     {
+        public delegate void BombButtonAction();
+        public static event BombButtonAction OnEventBomb;
         
-        
-        public void BombButtonHandler()
-        {
-            
-        }
+        public void BombButtonHandler() => OnEventBomb?.Invoke();
     }
 }
