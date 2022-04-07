@@ -63,7 +63,7 @@ public class FarmerMovement : MonoBehaviour
         }
     }
 
-    Vector3 RandomlyChooseDirection(float[] xANDy)
+    private Vector3 RandomlyChooseDirection(float[] xANDy)
     {
         Vector3 finalDest;
         if (Random.Range(0, xANDy.Length) == 0)
@@ -98,7 +98,7 @@ public class FarmerMovement : MonoBehaviour
         if (currentDirection != finalDirection)
         {
             currentDirection = finalDirection;
-            gameObject.GetComponent<SpriteManager>().ChangeSprite(finalDirection);
+            gameObject.GetComponent<DestinationSprite>().ChangeSprite(finalDirection);
         }
 
         while ((newPos - transform.position).sqrMagnitude > Mathf.Epsilon)
@@ -111,7 +111,7 @@ public class FarmerMovement : MonoBehaviour
         isMoving = false;
     }
 
-    void FarmerIsDirty()
+    private void FarmerIsDirty()
     {
         if (!isDirty)
         {

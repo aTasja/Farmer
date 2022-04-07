@@ -10,22 +10,22 @@ public class Bomb : MonoBehaviour
     public delegate void DirtyFarmerAction();
     public static event DirtyFarmerAction OnEventDirtyFarmer;
     
-    private bool collided;
-    private GameObject victim;
+    private bool _collided;
+    private GameObject _victim;
 
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(LaunchBomb());
-        collided = false;
+        _collided = false;
     }
 
     IEnumerator LaunchBomb()
     {
         yield return new WaitForSeconds(Lifetime);
 
-        if (collided) {
-            victim.GetComponent<SpriteManager>().DirtySprite();
+        if (_collided) {
+            _victim.GetComponent<DestinationSprite>().DirtySprite();
             if (OnEventDirtyFarmer != null)
                 OnEventDirtyFarmer();
         }
@@ -36,14 +36,14 @@ public class Bomb : MonoBehaviour
     {
         if (col.gameObject.tag == "Farmer")
         {
-            collided = true;
-            victim = col.gameObject;
+            _collided = true;
+            _victim = col.gameObject;
         }
     }
 
     public void OnCollisionExit2D(Collision2D col)
     {
-        collided = false;
-        victim = null;
+        _collided = false;
+        _victim = null;
     }
 }
